@@ -4,14 +4,15 @@ version = "0.1.0"
 authors = ["MajorX234 <majorx234@googlemail.com>"]
 edition = "2018"
 
-#[[bin]]
-#name = "first_app"
-#path = "src/first_app/main.rs"
+[[bin]]
+name = "first_app"
+path = "src/first_app/main.rs"
 
 [[bin]]
 name = "counter"
 path = "src/counter/main.rs"
 
 [dependencies]
+gtk4 = { version = "0.4.7", package = "gtk4" }
 relm4 = {version = "0.4.4", features = ["macros"] }
 relm4-components = { version = "*" }
