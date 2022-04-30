@@ -35,7 +35,7 @@ impl AppUpdate for AppModel {
 impl Widgets<AppModel, ()> for AppWidgets {
     view! {
         gtk::ApplicationWindow {
-            set_title: Some("Simple app"),
+            set_title: Some("counter"),
             set_default_width: 300,
             set_default_height: 100,
             set_child = Some(&gtk::Box) {
@@ -44,12 +44,13 @@ impl Widgets<AppModel, ()> for AppWidgets {
                 set_spacing: 5,
 
                 append = &gtk::Button {
-                    set_label: "Increment",
+                    set_label: "add 1",
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::Increment);
                     },
                 },
-                append = &gtk::Button::with_label("Decrement") {
+                append = &gtk::Button {
+                    set_label: "sub 1",
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::Decrement);
                     },
