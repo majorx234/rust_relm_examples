@@ -8,7 +8,9 @@ struct AppModel {
 
 enum AppMsg {
     Increment,
+    Increment10,
     Decrement,
+    Decrement10,
 }
 
 impl Model for AppModel {
@@ -23,8 +25,14 @@ impl AppUpdate for AppModel {
             AppMsg::Increment => {
                 self.counter = self.counter.wrapping_add(1);
             }
+            AppMsg::Increment10 => {
+                self.counter = self.counter.wrapping_add(10);
+            }
             AppMsg::Decrement => {
                 self.counter = self.counter.wrapping_sub(1);
+            }
+            AppMsg::Decrement10 => {
+                self.counter = self.counter.wrapping_sub(10);
             }
         }
         true
@@ -44,6 +52,12 @@ impl Widgets<AppModel, ()> for AppWidgets {
                 set_spacing: 5,
 
                 append = &gtk::Button {
+                    set_label: "add 10",
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, AppMsg::Increment10);
+                    },
+                },
+                append = &gtk::Button {
                     set_label: "add 1",
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::Increment);
@@ -53,6 +67,12 @@ impl Widgets<AppModel, ()> for AppWidgets {
                     set_label: "sub 1",
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::Decrement);
+                    },
+                },
+                append = &gtk::Button {
+                    set_label: "sub 10",
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, AppMsg::Decrement10);
                     },
                 },
                 append = &gtk::Label {
