@@ -12,6 +12,10 @@ path = "src/first_app/main.rs"
 name = "counter"
 path = "src/counter/main.rs"
 
+[[bin]]
+name = "euclidean"
+path = "src/euclidean/main.rs"
+
 [dependencies]
 gtk4 = { version = "0.4.7", package = "gtk4" }
 relm4 = {version = "0.4.4", features = ["macros"] }
