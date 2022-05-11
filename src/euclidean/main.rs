@@ -51,7 +51,10 @@ impl Widgets<AppModel, ()> for AppWidgets {
                 set_orientation: gtk::Orientation::Vertical,
                 set_margin_all: 5,
                 set_spacing: 5,
-
+                append = &gtk::Entry {
+                                     },
+                append = &gtk::Entry {
+                                },
                 append = &gtk::Button {
                     set_label: "calculate",
                     connect_clicked(sender) => move |_| {
@@ -72,10 +75,3 @@ fn main() {
     let app = RelmApp::new(model);
     app.run();
 }
-
-/*
-        let a: u32 = 16;
-    let b: u32 = 24;
-    let c: u32 = greatest_common_deivsor(a, b);
-    println!("gcd of {} and {} is {}", a, b, c);
-}*/
