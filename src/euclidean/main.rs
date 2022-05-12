@@ -1,10 +1,14 @@
-use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt};
+use gtk::prelude::{
+    BoxExt, ButtonExt, EntryBufferExtManual, EntryExt, GtkWindowExt, OrientableExt, WidgetExt,
+};
 use relm4::{gtk, send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
 use std::cmp;
 
 #[derive(Default)]
 struct AppModel {
     greatest_devisor: u32,
+    entry_a: gtk::EntryBuffer,
+    entry_b: gtk::EntryBuffer,
 }
 
 fn greatest_common_devisor(a_in: u32, b_in: u32) -> u32 {
@@ -33,7 +37,13 @@ impl AppUpdate for AppModel {
     fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
         match msg {
             AppMsg::Calculate => {
-                self.greatest_devisor = greatest_common_devisor(32, 48);
+                let text_a = self.entry_a.text();
+                let text_b = self.entry_b.text();
+                if let Ok(v_a) = text_a.parse::<u32>() {
+                    if let Ok(v_b) = text_b.parse::<u32>() {
+                        self.greatest_devisor = greatest_common_devisor(v_a, v_b);
+                    }
+                }
             }
         }
         true
@@ -52,8 +62,12 @@ impl Widgets<AppModel, ()> for AppWidgets {
                 set_margin_all: 5,
                 set_spacing: 5,
                 append = &gtk::Entry {
+                    set_buffer: &model.entry_a,
+                    set_tooltip_text: Some("Input a")
                                      },
                 append = &gtk::Entry {
+                    set_buffer: &model.entry_b,
+                    set_tooltip_text: Some("Input a")
                                 },
                 append = &gtk::Button {
                     set_label: "calculate",
