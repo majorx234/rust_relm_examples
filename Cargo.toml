@@ -16,6 +16,10 @@ path = "src/counter/main.rs"
 name = "euclidean"
 path = "src/euclidean/main.rs"
 
+[[bin]]
+name = "sesam_psw_manager"
+path = "src/sesam_psw_manager/main.rs"
+
 [dependencies]
 gtk4 = { version = "0.4.7", package = "gtk4" }
 relm4 = {version = "0.4.4", features = ["macros"] }
