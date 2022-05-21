@@ -17,6 +17,10 @@ name = "euclidean"
 path = "src/euclidean/main.rs"
 
 [[bin]]
+name = "pbkdf2_test"
+path = "src/pbkdf2_test/main.rs"
+
+[[bin]]
 name = "sesam_psw_manager"
 path = "src/sesam_psw_manager/main.rs"
 
@@ -24,3 +28,5 @@ path = "src/sesam_psw_manager/main.rs"
 gtk4 = { version = "0.4.7", package = "gtk4" }
 relm4 = {version = "0.4.4", features = ["macros"] }
 relm4-components = { version = "*" }
+pbkdf2 = "0.11"
+rand_core = { version = "0.6.3", features = ["std"] }
