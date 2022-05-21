@@ -1,10 +1,19 @@
 use gtk::prelude::{
     BoxExt, ButtonExt, EntryBufferExtManual, EntryExt, GtkWindowExt, OrientableExt, WidgetExt,
 };
+use pbkdf2::{
+    password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
+    Pbkdf2,
+};
 use relm4::{gtk, send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
+use std::str;
 
+#[derive(Default)]
 struct AppModel {
     psw: String,
+    master_buffer: gtk::EntryBuffer,
+    domain_buffer: gtk::EntryBuffer,
+    user_buffer: gtk::EntryBuffer,
 }
 
 enum AppMsg {
@@ -21,7 +30,30 @@ impl AppUpdate for AppModel {
     fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
         match msg {
             AppMsg::Show => {
-                self.psw = String::from("test");
+                let master = self.master_buffer.text();
+                let domain = self.domain_buffer.text();
+                let user = self.user_buffer.text();
+
+                let salt: &str = &user[1..8];
+                /*{
+                        let usr_str_result = str::from_utf8(user);
+                        match usr_str_result {
+                            Ok(usr_str) => usr_str,
+                            Err(_) => "",
+                        }
+                };*/
+                self.psw = String::from("error234");
+                let password: String = format!("{}{}", master, domain);
+                let password_hash_result = Pbkdf2.hash_password(password.as_bytes(), &salt);
+                match password_hash_result {
+                    Ok(password_hash) => {
+                        let password_hash_string = password_hash.to_string();
+                        self.psw = password_hash_string;
+                    }
+                    Err(_) => {
+                        self.psw = String::from("error");
+                    }
+                }
             }
         }
         true
@@ -59,10 +91,13 @@ impl Widgets<AppModel, ()> for AppWidgets {
             .build();
         let master_label = gtk::Label::new(Some("MasterPsw:"));
         let master_input = gtk::Entry::new();
+        master_input.set_buffer(&model.master_buffer);
         let domain_label = gtk::Label::new(Some("Domain:"));
         let domain_input = gtk::Entry::new();
+        domain_input.set_buffer(&model.domain_buffer);
         let user_label = gtk::Label::new(Some("User:"));
         let user_input = gtk::Entry::new();
+        user_input.set_buffer(&model.user_buffer);
         let config_label = gtk::Label::new(Some("configfile:"));
         let config_input = gtk::Entry::new();
         let confirm_button = gtk::Button::with_label("confirm");
@@ -81,6 +116,11 @@ impl Widgets<AppModel, ()> for AppWidgets {
         vbox.append(&config_input);
         vbox.append(&confirm_button);
         vbox.append(&result_label);
+
+        let btn_confirm_sender = sender.clone();
+        confirm_button.connect_clicked(move |_| {
+            send!(btn_confirm_sender, AppMsg::Show);
+        });
         Self {
             window,
             vbox,
@@ -110,9 +150,10 @@ impl Widgets<AppModel, ()> for AppWidgets {
 }
 
 fn main() {
-    let model = AppModel {
+    let model = AppModel::default();
+    /*AppModel {
         psw: String::from("tester"),
-    };
+    };*/
     let app = RelmApp::new(model);
     app.run();
 }
