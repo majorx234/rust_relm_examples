@@ -5,7 +5,8 @@ use pbkdf2::{
 
 fn main() {
     let password = b"hunter42"; // Bad password; don't actually use!
-    let salt = SaltString::generate(&mut OsRng);
+    let salt: &str = "test123";
+    //= SaltString::generate(&mut OsRng);
 
     // Hash password to PHC string ($pbkdf2-sha256$...)
     let password_hash_result = Pbkdf2.hash_password(password, &salt);
